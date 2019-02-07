@@ -1,6 +1,5 @@
 import os
 import json
-import  time
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
@@ -48,7 +47,7 @@ def main():
 
     file_name_inc = 0
     output_file_name = str(comp_time.year) + "-"+ str(comp_time.month) + "-" + str(comp_time.day)+ "-time" + str(comp_time.hour)+".txt"
-    output_file = open("../dicts/"+ output_file_name, 'w') # file to save first time seg
+    output_file = open("./dicts/"+ output_file_name, 'w') # file to save first time seg
     print("opened: ", output_file.name) # error checking
 
     for i in range(0, len(ind)):   # iterates through all files
@@ -68,7 +67,7 @@ def main():
 
                     #file_name_inc+=1
                     output_file_name = file_time_file_name
-                    output_file = open("../dicts/"+ output_file_name, 'w+')
+                    output_file = open("./dicts/"+ output_file_name, 'w+')
 
                     output_file.write(data[j]['tweet_text']) # writes first tweet to file
 
@@ -76,6 +75,7 @@ def main():
                 else:
                     print("Current File Time:",file_time(i,j))
                     output_file.write(data[j]['tweet_text']) # writes the tweet to file
+    output_file.close()
 
 if __name__ == "__main__":
     main()
