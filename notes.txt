@@ -9,12 +9,12 @@ Data Between Jan 22nd and August 20th
 
 weeks it is!
 
-2018-01-22 - start_time - running
-2018-01-29 - running
+2018-01-22 - start_time - finished
+2018-01-29 - finished
 2018-02-05 - running 
-2018-02-12
-2018-02-19
-2018-02-26
+2018-02-12 - running
+2018-02-19 - running
+2018-02-26 - running 
 2018-03-05
 2018-03-12
 2018-03-19
