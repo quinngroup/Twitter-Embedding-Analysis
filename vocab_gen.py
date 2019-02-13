@@ -15,6 +15,11 @@ for file in dicts_list:
         print("opened: ../dicts/"+file)
         for line in f:
             print("line:",line)
+
+            CUSTOM_FILTERS = [lambda x: x.lower(), strip_punctuation, remove_stopwords]
+            words2 = preprocess_string(words,CUSTOM_FILTERS)
+            print("preprocessing complete:",words2)
+
             #splits line into words in a list
             words = line.split()
             print("line split:",words)
@@ -24,13 +29,8 @@ for file in dicts_list:
 
             # removes urls from the list
             for word in words:
-                if word.startsWith("http"):
+                if re.match(r'^http',word):
                     words.remove(word)
-
-            # usues gensim preprocessing to remove punctuation, stopwords and make the words lowercase
-            CUSTOM_FILTERS = [lambda x: x.lower(), strip_punctuation, remove_stopwords]
-            words2 = preprocess_string(words,CUSTOM_FILTERS)
-            print("preprocessing complete:",words2)
 
             # checks to see if words are in data and if not adds the word to data
             for word in words2:
@@ -41,7 +41,7 @@ for file in dicts_list:
                     dict[str(word)] = ind
                     ind+=1
 
-# dumps data to file and saves it 
+# dumps data to file and saves it
 js = json.dump(data)
 f = open("voc.json","w")
 f.write(js)
