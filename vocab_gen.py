@@ -17,20 +17,20 @@ for file in dicts_list:
             print("line:",line)
 
             CUSTOM_FILTERS = [lambda x: x.lower(), strip_punctuation, remove_stopwords]
-            words2 = preprocess_string(words,CUSTOM_FILTERS)
+            words = preprocess_string(line,CUSTOM_FILTERS)
             print("preprocessing complete:",words2)
 
             #splits line into words in a list
-            words = line.split()
+            words2 = words.split()
             print("line split:",words)
 
             # removes RT from the begining of retweets
-            if "RT" in words:  words.remove("RT")
+            if "RT" in words2:  words.remove("RT")
 
             # removes urls from the list
-            for word in words:
+            for word in words2:
                 if re.match(r'^http',word):
-                    words.remove(word)
+                    words2.remove(word)
 
             # checks to see if words are in data and if not adds the word to data
             for word in words2:
