@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
-import os, re
+import os, re, json
 from gensim.parsing.preprocessing import remove_stopwords, strip_punctuation, preprocess_string
 
 # CLEANING TIME
@@ -14,36 +14,54 @@ for file in dicts_list:
     with open("../dicts/"+file) as f:
         print("opened: ../dicts/"+file)
         for line in f:
-            print("line:",line)
+            #print("==============TWEET==============")
+            #print("Original Tweet:",line)
+            #print("\n")
 
-            CUSTOM_FILTERS = [lambda x: x.lower(), strip_punctuation, remove_stopwords]
+            words = line.split()
+
+            # removes usernames from the list
+            for word in words:
+                if re.match(r'^@',word):
+                    words.remove(word)
+            #        print("removed word",word)
+
+            line = ' '.join(words)
+
+            # gensim preproceesing...
+            # makes lowercase, strips punctuation, and removes stopwords
+            CUSTOM_FILTERS = [lambda x: x.lower(), remove_stopwords]
             words = preprocess_string(line,CUSTOM_FILTERS)
-            print("preprocessing complete:",words2)
+            #print("preprocessing complete:",words)
 
-            #splits line into words in a list
-            words2 = words.split()
-            print("line split:",words)
+            # removes usernames from the list
+            for word in words:
+                if re.match(r'^@',word):
+                    words.remove(word)
+             #       print("removed word",word)
 
             # removes RT from the begining of retweets
-            if "RT" in words2:  words.remove("RT")
+            if "rt" in words:
+                words.remove("rt")
+            #    print("removed rt")
+
 
             # removes urls from the list
-            for word in words2:
+            for word in words:
                 if re.match(r'^http',word):
-                    words2.remove(word)
+                    words.remove(word)
+            #        print("removed url",word)
 
             # checks to see if words are in data and if not adds the word to data
-            for word in words2:
+            for word in words:
                 if word in data:
                     continue
                 else:
-                    print(word,"added to list")
-                    dict[str(word)] = ind
+            #        print(word,"added to list")
+                    data[str(word)] = ind
                     ind+=1
 
 # dumps data to file and saves it
-js = json.dump(data)
-f = open("voc.json","w")
-f.write(js)
+with open("voc.json", "w") as fp:
+  json.dump(data, fp)
 print("written to json file")
-f.close()
