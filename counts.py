@@ -42,14 +42,25 @@ def counts(corp,l=5):
     wc = {}
     wnd = {}
 
+
+    # must initialize keys before they can be incremented for some reason.....
+    # I get a KeyError if I do not do this.
     for tweet in corp:
         tweet = tweet.split()
         opt = list(combinations(tweet,2))
+
         for i in range(len(tweet)):
             wc[tweet[i]] = 0
+            if i < len(tweet) - 5:
+                a = tweet[i:i+5]
 
-        for i in range(len(opt)):
-            wnd[opt[i]] = 0
+                for j in range(len(opt)):
+                    wnd[opt[j]] = 0 #<-----
+
+    # increments values
+    for tweet in corp:
+        tweet = tweet.split()
+        opt = list(combinations(tweet,2))
 
         for i in range(len(tweet)):
             wc[tweet[i]]+=1
@@ -59,12 +70,14 @@ def counts(corp,l=5):
                 for j in range(len(opt)):
                     wnd[opt[j]]+=1
 
-    with open('wc1.csv', 'w') as f:  # Just use 'w' mode in 3.x
+    # writes word count to a file
+    with open('wc1.csv', 'w') as f:
         w = csv.DictWriter(f, wc.keys())
         w.writeheader()
         w.writerow(wc)
 
-    with open('wnd1.csv', 'w') as f:  # Just use 'w' mode in 3.x
+    # writes window count toa file
+    with open('wnd1.csv', 'w') as f:
         w = csv.DictWriter(f, wnd.keys())
         w.writeheader()
         w.writerow(wnd)
