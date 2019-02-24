@@ -27,7 +27,7 @@ def load_corp(file):
             words = preprocess_string(line,CUSTOM_FILTERS)
 
             # removes RT from the begining of retweets
-            for i in range(len(words)):
+            for i in range(len(words)-1):
                 if "rt" == words[i]:
                     words.remove("rt")
 
@@ -42,20 +42,14 @@ def counts(corp,l=5):
     wc = {}
     wnd = {}
 
-
     # must initialize keys before they can be incremented for some reason.....
     # I get a KeyError if I do not do this.
     for tweet in corp:
         tweet = tweet.split()
         opt = list(combinations(tweet,2))
 
-        for i in range(len(tweet)):
-            wc[tweet[i]] = 0
-            if i < len(tweet) - 5:
-                a = tweet[i:i+5]
-
-                for j in range(len(opt)):
-                    wnd[opt[j]] = 0 #<-----
+        wc = {key: 0 for el in tweet}
+        wnd = {key: 0 for el in opt}
 
     # increments values
     for tweet in corp:
@@ -82,6 +76,7 @@ def counts(corp,l=5):
         w.writeheader()
         w.writerow(wnd)
 
-
+print("loading corp")
 corp = load_corp("../dicts/2018-01-22.txt")
+print("corp loaded")
 counts(corp)
