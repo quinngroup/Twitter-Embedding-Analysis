@@ -1,55 +1,44 @@
+import numpy as np
+from joblib import Parallel, delayed
 import csv, re
-from gensim.parsing.preprocessing import remove_stopwords, strip_punctuation, preprocess_string
 from itertools import combinations
+from collections import defaultdict
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+nltk.download('stopwords')
+nltk.download('punkt')
+
 
 def load_corp(file):
     ind = 0
     data = []
-    with open("../dicts/"+file) as f:
+    with open(file) as f:
         for line in f:
-            words = line.split()
+            tweet = line.lower() # lowercase
 
-            # removes usernames from the list
-            for word in words:
-                if re.match(r'^@',word):
-                    words.remove(word)
+            tweet = re.sub(r"http\S+", "", tweet) # removes urls
+            tweet = re.sub(r"@\S+","",tweet)      # removes usernames
+            tweet = re.sub(r"#\S+","",tweet)      # removes hastags
+            tweet = re.sub('[\W_]+',' ', tweet)   # removes various non-alphanumeric characters
+            tweet = re.sub(r"rt","",tweet)        # removes retweet 'rt'
 
-            # removes urls from the list
-            for word in words:
-                if re.match(r'^http',word):
-                    words.remove(word)
+            stop_words = set(stopwords.words('english'))
+            word_tokens = word_tokenize(tweet)
+            filtered_sentence = [w for w in word_tokens if not w in stop_words] # removes stopwords
 
-            line = ' '.join(words)
 
-            # gensim preproceesing...
-            # makes lowercase, strips punctuation, and removes stopwords
-            CUSTOM_FILTERS = [lambda x: x.lower(), remove_stopwords, strip_punctuation]
-            words = preprocess_string(line,CUSTOM_FILTERS)
-
-            # removes RT from the begining of retweets
-            for i in range(len(words)-1):
-                if "rt" == words[i]:
-                    words.remove("rt")
-
-            line = ' '.join(words)
-
+            tweet = ' '.join(filtered_sentence)
             # adds tweet to list
-            data.insert(ind,line)
+            data.insert(ind,tweet)
+
             ind+=1
+    data = list(filter(None, data)) # removes any empty entrie
     return data
 
 def counts(corp,l=5):
-    wc = {}
-    wnd = {}
-
-    # must initialize keys before they can be incremented for some reason.....
-    # I get a KeyError if I do not do this.
-    for tweet in corp:
-        tweet = tweet.split()
-        opt = list(combinations(tweet,2))
-
-        wc = {key: 0 for el in tweet}
-        wnd = {key: 0 for el in opt}
+    wc = defaultdict(int)
+    wnd = defaultdict(int)
 
     # increments values
     for tweet in corp:
@@ -77,6 +66,6 @@ def counts(corp,l=5):
         w.writerow(wnd)
 
 print("loading corp")
-corp = load_corp("../dicts/2018-01-22.txt")
+corp = load_corp("test.txt")
 print("corp loaded")
 counts(corp)
