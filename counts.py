@@ -36,7 +36,8 @@ def load_corp(file):
     data = list(filter(None, data)) # removes any empty entrie
     return data
 
-def counts(corp,l=5):
+def counts(file,l=5, n):
+    corp = load_corp(file)
     wc = defaultdict(int)
     wnd = defaultdict(int)
 
@@ -54,18 +55,18 @@ def counts(corp,l=5):
                     wnd[opt[j]]+=1
 
     # writes word count to a file
-    with open('wc1.csv', 'w') as f:
+    with open('wc'+str(n)+'.csv', 'w') as f:
         w = csv.DictWriter(f, wc.keys())
         w.writeheader()
         w.writerow(wc)
 
     # writes window count toa file
-    with open('wnd1.csv', 'w') as f:
+    with open('wnd'+str(n)+'.csv', 'w') as f:
         w = csv.DictWriter(f, wnd.keys())
         w.writeheader()
         w.writerow(wnd)
 
-print("loading corp")
-corp = load_corp("test.txt")
-print("corp loaded")
-counts(corp)
+path = "/opt/data/dicts"
+dir_list = os.list_dir(path)
+print(dir_list)
+#Parrallel(n_jobs=8)(delayed(counts)(corp, i) for file in dir_list
