@@ -42,11 +42,13 @@ def dd():
 def cmb(t,val):
     return list(combinations(tweet,2))
 
-def counts(file,l=5, n):
+def counts(file, n, l=5):
+    print("loading",file)
     corp = load_corp(file)
+    print("loaded", file)
     wc = dd()
     wnd = dd()
-
+    print("creaated wc, wnd")
     # increments values
     for tweet in corp:
         tweet = tweet.split()
@@ -75,4 +77,4 @@ def counts(file,l=5, n):
 path = "/opt/data/dicts"
 dir_list = os.list_dir(path)
 for f, n in enumerate(dir_list):
-    counts(f, 5, n)
+    counts(f, n)
