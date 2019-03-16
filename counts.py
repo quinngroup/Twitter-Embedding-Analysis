@@ -1,6 +1,7 @@
+print("importing..")
 import numpy as np
 from joblib import Parallel, delayed
-import csv, re
+import csv, re, os
 from itertools import combinations
 from collections import defaultdict
 import nltk
@@ -8,7 +9,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 nltk.download('stopwords')
 nltk.download('punkt')
-
+print("finished importting")
 
 def load_corp(file):
     ind = 0
@@ -44,7 +45,7 @@ def cmb(t,val):
 
 def counts(file, n, l=5):
     print("loading",file)
-    corp = load_corp(file)
+    corp = load_corp("../dicts/"+file)
     print("loaded", file)
     wc = dd()
     wnd = dd()
@@ -74,7 +75,9 @@ def counts(file, n, l=5):
         w.writeheader()
         w.writerow(wnd)
 
+print("start")
 path = "/opt/data/dicts"
-dir_list = os.list_dir(path)
+dir_list = os.listdir(path)
 for f, n in enumerate(dir_list):
-    counts(f, n)
+    print(n, f)
+    counts(n, f)
