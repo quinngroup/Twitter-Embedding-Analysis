@@ -36,15 +36,21 @@ def load_corp(file):
     data = list(filter(None, data)) # removes any empty entrie
     return data
 
+def dd():
+    return defaultdict(int)
+
+def cmb(t,val):
+    return list(combinations(tweet,2))
+
 def counts(file,l=5, n):
     corp = load_corp(file)
-    wc = defaultdict(int)
-    wnd = defaultdict(int)
+    wc = dd()
+    wnd = dd()
 
     # increments values
     for tweet in corp:
         tweet = tweet.split()
-        opt = list(combinations(tweet,2))
+        opt = cmb(tweet,2)
 
         for i in range(len(tweet)):
             wc[tweet[i]]+=1
@@ -68,5 +74,5 @@ def counts(file,l=5, n):
 
 path = "/opt/data/dicts"
 dir_list = os.list_dir(path)
-print(dir_list)
-#Parrallel(n_jobs=8)(delayed(counts)(corp, i) for file in dir_list
+for f, n in enumerate(dir_list):
+    counts(f, 5, n)
