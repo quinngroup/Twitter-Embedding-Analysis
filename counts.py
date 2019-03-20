@@ -5,6 +5,7 @@ import csv, re, os
 from itertools import combinations
 from collections import defaultdict
 import nltk
+import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 nltk.download('stopwords')
@@ -41,7 +42,7 @@ def dd():
     return defaultdict(int)
 
 def cmb(t,val):
-    return list(combinations(tweet,2))
+    return list(combinations(t,val))
 
 def counts(file, n, l=5):
     print("loading",file)
@@ -63,17 +64,13 @@ def counts(file, n, l=5):
                 for j in range(len(opt)):
                     wnd[opt[j]]+=1
 
-    # writes word count to a file
-    with open('wc'+str(n)+'.csv', 'w') as f:
-        w = csv.DictWriter(f, wc.keys())
-        w.writeheader()
-        w.writerow(wc)
+    wc = pd.DataFrame(wc, index=[0])
+    wnd = pd.DataFrame(wnd, index=[0])
+    wc = wc.T
+    wnd = wnd.T
 
-    # writes window count toa file
-    with open('wnd'+str(n)+'.csv', 'w') as f:
-        w = csv.DictWriter(f, wnd.keys())
-        w.writeheader()
-        w.writerow(wnd)
+    wc.to_csv("wc/wc" + str(n) + ".csv")
+    wnd.to_csv("wnd/wnd" + str(n) + ".csv")
 
 print("start")
 path = "/opt/data/dicts"
