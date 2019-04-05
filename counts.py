@@ -1,7 +1,9 @@
 print("importing..")
 import numpy as np
 from joblib import Parallel, delayed
-import csv, re, os
+import csv,
+import re
+import os
 from itertools import combinations
 from collections import defaultdict
 import nltk
@@ -41,9 +43,6 @@ def load_corp(file):
 def dd():
     return defaultdict(int)
 
-def cmb(t,val):
-    return list(combinations(t,val))
-
 def counts(file, n, l=5):
     print("loading",file)
     corp = load_corp("../dicts/"+file)
@@ -54,7 +53,7 @@ def counts(file, n, l=5):
     # increments values
     for tweet in corp:
         tweet = tweet.split()
-        opt = cmb(tweet,2)
+        opt = list(combinations(tweet, 2))
 
         for i in range(len(tweet)):
             wc[tweet[i]]+=1
