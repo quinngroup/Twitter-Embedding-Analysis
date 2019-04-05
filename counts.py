@@ -1,10 +1,5 @@
-print("importing..")
-import numpy as np
-from joblib import Parallel, delayed
-import csv,
 import re
 import os
-from itertools import combinations
 from collections import defaultdict
 import nltk
 import pandas as pd
@@ -12,39 +7,40 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 nltk.download('stopwords')
 nltk.download('punkt')
-print("finished importting")
+
 
 def load_corp(file):
     ind = 0
     data = []
     with open(file) as f:
         for line in f:
-            tweet = line.lower() # lowercase
+            tweet = line.lower()  # lowercase
 
-            tweet = re.sub(r"http\S+", "", tweet) # removes urls
-            tweet = re.sub(r"@\S+","",tweet)      # removes usernames
-            tweet = re.sub(r"#\S+","",tweet)      # removes hastags
-            tweet = re.sub('[\W_]+',' ', tweet)   # removes various non-alphanumeric characters
-            tweet = re.sub(r"rt","",tweet)        # removes retweet 'rt'
+            tweet = re.sub(r"http\S+", "", tweet)
+            tweet = re.sub(r"@\S+", "", tweet)
+            tweet = re.sub(r"#\S+", "", tweet)
+            tweet = re.sub('[^0-9a-zA-Z]+', ' ', tweet)
+            tweet = re.sub(r"rt", "", tweet)
 
             stop_words = set(stopwords.words('english'))
             word_tokens = word_tokenize(tweet)
-            filtered_sentence = [w for w in word_tokens if not w in stop_words] # removes stopwords
-
+            filtered_sentence = [w for w in word_tokens if w not in stop_words]
 
             tweet = ' '.join(filtered_sentence)
             # adds tweet to list
-            data.insert(ind,tweet)
+            data.insert(ind, tweet)
 
-            ind+=1
-    data = list(filter(None, data)) # removes any empty entrie
+            ind += 1
+    data = list(filter(None, data))  # removes any empty entrie
     return data
+
 
 def dd():
     return defaultdict(int)
 
-def counts(file, n, l=5):
-    print("loading",file)
+
+def counts(file, n, window_size=5):
+    print("loading", file)
     corp = load_corp("../dicts/"+file)
     print("loaded", file)
     wc = dd()
@@ -53,15 +49,16 @@ def counts(file, n, l=5):
     # increments values
     for tweet in corp:
         tweet = tweet.split()
-        opt = list(combinations(tweet, 2))
 
         for i in range(len(tweet)):
-            wc[tweet[i]]+=1
+            opt = tweet[i:i+5]
+            mid = opt[len(opt)/2]
+            wc[tweet[i]] += 1
             if i < len(tweet) - 5:
-                a = tweet[i:i+5]
 
                 for j in range(len(opt)):
-                    wnd[opt[j]]+=1
+                    row_name = str(mid) + str(opt[j])
+                    wnd[row_name] += 1
 
     wc = pd.DataFrame(wc, index=[0])
     wnd = pd.DataFrame(wnd, index=[0])
@@ -70,6 +67,7 @@ def counts(file, n, l=5):
 
     wc.to_csv("wc/wc" + str(n) + ".csv")
     wnd.to_csv("wnd/wnd" + str(n) + ".csv")
+
 
 print("start")
 path = "/opt/data/dicts"
