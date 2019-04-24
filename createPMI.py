@@ -1,6 +1,11 @@
-import math
+import numpy as np
+import gensim as gn
+from gensim.parsing.preprocessing import remove_stopwords, strip_punctuation, preprocess_string
+from scipy.sparse import csc_matrix, save_npz, lil_matrix
+import json
+import os, re, math
+import multiprocessing as mp
 import pandas as pd
-from scipy.sparse import csc_matrix, save_npz
 
 wc = pd.read_csv("wc/wc0.csv")
 wc.columns = ["words", "count"]
@@ -39,10 +44,10 @@ def create_PMI(wc, wnd):
             word1 = wnd["word2"].iloc[j]
             word2 = wnd["word2"].iloc[k]
             try: 
+                print("word1: " + str(word1),", word2: " + str(word2))
                 word1_count = wc[wc["words"] == word1]["counts"].item()
                 word2_count = wc[wc["words"] == word2]["counts"].item()
                 # print(word1_count, word2_count)
-                # print("word1: " + str(word1),", word2: " + str(word2))
                 df1 = wnd.loc[wnd.word1 == word1]
                 df1 = df1.loc[df1["word2"] == word2]
                 wnd_value_count = df1["count"].iloc[0]
