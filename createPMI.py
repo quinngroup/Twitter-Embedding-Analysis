@@ -6,63 +6,37 @@ import json
 import os, re, math
 import multiprocessing as mp
 import pandas as pd
+from IPython.display import clear_output
+from time import time
+from collections import Counter
+from math import log
+# import pdb; pdb.set_trace()
 
-wc = pd.read_csv("wc/wc0.csv")
-wc.columns = ["words", "count"]
-# wc = wc.rename(index=str, columns={"words": "count", "count": "words"})
-print(wc.head())
+wnd = pd.read_csv("testing/wnd0.csv")
 
-wnd = pd.read_csv("wnd/wnd0.csv")
-wnd.columns = ["word1", "word2", "count"]
-# wnd = wnd.rename(columns={"word1": "word2", "word2":"word1"})
-# print("\n")
-print(wnd.head())
+wc = pd.read_csv("testing/wc0.csv")
 
-def sum_dict(df):
-    # Finds the total word count
-    sum = 0
-    for i in range(len(df)):
-      sum = sum + df["count"][i]
-    return sum
-
-def create_PMI(wc, wnd):
-    """
-    Creates PMI matrix based on inputed wc and wnd
-    Parameters:
-    wc - word count dataframe
-    wnd - window count dataframe
-    Output:
-    A PMI matrix
-    """
-    len_d = sum_dict(wc)  # gets number of words
-    PMI = csc_matrix((len(wnd["word2"]), len(wnd["word2"])), dtype=float)  # scipy sparse matrix
+x2i, i2x = {}, {}
+for indexes, actualrowvalues in wc.iterrows():
+    x2i[actualrowvalues["word"]] = indexes
+    i2x[indexes] = actualrowvalues["word"]
     
-    x = 0
-    y = 0
-    for j in range(len(wnd["word2"])):
-        for k in range(len(wnd["word2"])):
-            word1 = wnd["word2"].iloc[j]
-            word2 = wnd["word2"].iloc[k]
-            try: 
-                print("word1: " + str(word1),", word2: " + str(word2))
-                word1_count = wc[wc["words"] == word1]["counts"].item()
-                word2_count = wc[wc["words"] == word2]["counts"].item()
-                # print(word1_count, word2_count)
-                df1 = wnd.loc[wnd.word1 == word1]
-                df1 = df1.loc[df1["word2"] == word2]
-                wnd_value_count = df1["count"].iloc[0]
-                # print("wnd count: " + str(wnd_value_count))
+wndSum = wnd['counts'].sum()
+wcSum = wc['counts'].sum()
 
-                t = wnd_value_count * len_d
-                b = word1_count * word2_count
-                fin = math.log(t/b)
-                PMI[x, y] = fin  # final value is added to PMI
-                print("PMI[" + str(x) + ", " + str(y) + "] = " + str(fin))
-                y = y + 1
-            except KeyError:
-                print("key Error")
-        x = x + 1
-        y = 0
-    save_npz("../matrices/PMI0.npz", PMI)
+pmi_samples = Counter()
+data, rows, cols = [], [], []
 
-create_PMI(wc, wnd)
+for index, rowvalues in wnd.iterrows():
+    
+    if index % 10000 == 0:
+        print(f'finished {index/20427230:.2%} of the PMI matrix')
+
+    rows.append(x2i[rowvalues["word1"]])
+    cols.append(x2i[rowvalues["word2"]])
+    targetrow = wc.loc[wc["word"] == rowvalues["word1"]]
+    targetrow2 = wc.loc[wc["word"] == rowvalues["word2"]]
+    data.append(np.log((rowvalues["counts"] / wndSum) / (targetrow["counts"] / wcSum) / (targetrow2["counts"] / wcSum)))
+    pmi_samples[(rowvalues["word1"], rowvalues["word2"])] = data[-1]
+PMI = csc_matrix((data, (rows, cols)))
+save_npz("../matrices/PMI_0.npz", PMI)
