@@ -21,8 +21,8 @@ def panda_json():
 def convert_data():
     with open('tweets3506.json') as json_file:
         df = pd.read_json(json_file)
-    data = df.to_csv('csv_file.csv', encoding='utf-8', index=False)
-    return data
+        df.to_csv('csv_file.csv', encoding='utf-8', index=False)
+    return df
 
 #currently removing punctuation, lowercase letters, remove numbers
 def preprocess(data):
