@@ -1,7 +1,5 @@
 # Twitter Embeddings Analysis
 
-https://arxiv.org/abs/1703.00607
-
 ## Project Goals:
 
 **Unrelated Tasks:**
