@@ -11,9 +11,9 @@
    - The dictionaries can be saved as text files as long as there is a character that separates all of the tweets
  - Code that gets the word counts for each word then saves it in a data frame,
    - Check for empty values before we save the data frames
-   - Name should look like "wc_2018-10-22.csv" or something like it
+   - Name should look like "`wc_2018-10-22.csv`" or something like it
  - Code that gets the window count of the words and saves them to a data frame
-   - Also organized by time and named accordingly like "wnd_2018-10-22.csv" or something like that
+   - Also organized by time and named accordingly like "`wnd_2018-10-22.csv`" or something like that
    - Also check for empty entries
    - We should be able to adjust the window length
  
@@ -57,5 +57,3 @@
 
 **Dynamic Word Embeddings for Evolving Semantic Discovery:**
 https://arxiv.org/abs/1703.00607
-
-~~This file needs more information about the project: who is working on it, what they're working on, the goals of the project, how to get started, and where the project currently stands.~~
