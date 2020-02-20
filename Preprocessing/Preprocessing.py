@@ -4,6 +4,14 @@ from pandas import DataFrame
 import nltk
 import re
 
+################### Globally Setting Values ##############################
+pd.set_option('display.max_columns', None)
+
+
+
+
+################# Test Methods ##########################################
+
 # these are testing methods, don't worry about them
 def json_print():
     with open('tweets3506.json') as json_file:
@@ -18,11 +26,17 @@ def panda_json():
     for element in pandaDf:
         print(element['tweet_text'])
 
-def convert_data():
-    with open('tweets3506.json') as json_file:
+
+########### Important Methods ########################################
+
+def to_data_frame():
+    with open('../../tweets245.json') as json_file:
         df = pd.read_json(json_file)
-        df.to_csv('csv_file.csv', encoding='utf-8', index=False)
+        #df.to_csv('csv_file.csv', encoding='utf-8', index=False)
     return df
+
+def return_tweets(df):
+    return(df['tweet_text'][0:20])
 
 #currently removing punctuation, lowercase letters, remove numbers
 def preprocess(data):
@@ -34,11 +48,34 @@ def preprocess(data):
 
     return cleanData
 
+
+
+########## Sort data by Date (Making CSVs by week) #################
+
+
+
+
+
+
+
+
+
+
+######## Tokenization, preparation for Matrix #####################
+
 #tokenizing into words, removing stop words (bag of words model)
 #def tokenize_data():
     # placeholder again
 
 #I'm not entirely sure the structure of the PMI matrix, but the data is now sent to that file
 
+
+
+
+########### Main ################################################
+
+
+
 if __name__ == "__main__":
-    preprocess(convert_data())
+    #print(to_data_frame())
+    print(return_tweets(to_data_frame()))
