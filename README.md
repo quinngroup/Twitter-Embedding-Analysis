@@ -49,7 +49,7 @@
 
 **Zane Page (Project Lead):** Implementing algorithm for PPMI matrices.
 
-**Ivan Mo:** Updating project description files and following along with Kevin's work.
+**Ivan Mo:** Updating project description files and implementing continuous integration.
 
 **Krishi Kishore:** Working on algorithm for alignment of PPMI matrices across time.
 
