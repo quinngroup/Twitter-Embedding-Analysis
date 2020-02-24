@@ -40,13 +40,13 @@ def return_tweets(df):
 
 #currently removing punctuation, lowercase letters, remove numbers
 def preprocess(data):
-    replaceNoSpace = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
-    replaceWithSpace = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\x97)")
+    replace_no_space = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
+    replace_with_space = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\x97)")
 
-    cleanData = [replaceNoSpace.sub("", line.lower()) for line in data]
-    cleanData = [replaceWithSpace.sub(" ", line) for line in data]
+    clean_data = [replace_no_space.sub("", line.lower()) for line in data]
+    clean_data = [replace_with_space.sub(" ", line) for line in data]
 
-    return cleanData
+    return clean_data
 
 
 
