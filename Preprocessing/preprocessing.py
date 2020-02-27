@@ -26,6 +26,12 @@ def panda_json():
     for element in pandaDf:
         print(element['tweet_text'])
 
+def return_tweets(df):
+    return(df['tweet_text'][0:20])
+
+def return_data(data):
+    for line in data:
+        print(line)
 
 ########### Important Methods ########################################
 
@@ -34,9 +40,6 @@ def to_data_frame():
         df = pd.read_json(json_file)
         #df.to_csv('csv_file.csv', encoding='utf-8', index=False)
     return df
-
-def return_tweets(df):
-    return(df['tweet_text'][0:20])
 
 #currently removing punctuation, lowercase letters, remove numbers
 def preprocess(data):
@@ -78,4 +81,5 @@ def preprocess(data):
 
 if __name__ == "__main__":
     #print(to_data_frame())
+    print(preprocess(to_data_frame()))
     print(return_tweets(to_data_frame()))
