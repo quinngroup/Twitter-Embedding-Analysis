@@ -6,7 +6,7 @@ import re
 
 ################### Globally Setting Values ##############################
 pd.set_option('display.max_columns', None)
-
+#testing to add to branch
 
 
 
@@ -42,6 +42,7 @@ def to_data_frame():
     return df
 
 #currently removing punctuation, lowercase letters, remove numbers
+
 def preprocess(data):
     replace_no_space = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
     replace_with_space = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\x97)")
