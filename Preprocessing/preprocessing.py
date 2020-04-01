@@ -9,38 +9,14 @@ pd.set_option('display.max_columns', None)
 #testing to add to branch
 
 
-
-################# Test Methods ##########################################
-
-# these are testing methods, don't worry about them
-def json_print():
-    with open('tweets3506.json') as json_file:
-        data = json.load(json_file)
-        for x in range(0, 50):
-            print(data[x])
-
-# these are testing methods, don't worry about them
-def panda_json():
+def create_df():
     with open('tweets3506.json') as json_file:
         pandaDf = json.load(json_file)
-    for element in pandaDf:
-        print(element['tweet_text'])
-
-def return_tweets(df):
-    return(df['tweet_text'][0:20])
-
-def return_data(data):
-    for line in data:
-        print(line)
-
-########### Important Methods ########################################
 
 def to_data_frame():
     with open('../../tweets245.json') as json_file:
         df = pd.read_json(json_file)
-        #df.to_csv('csv_file.csv', encoding='utf-8', index=False)
-    return df
-
+      
 #currently removing punctuation, lowercase letters, remove numbers
 
 def preprocess(data):
@@ -81,6 +57,5 @@ def preprocess(data):
 
 
 if __name__ == "__main__":
-    #print(to_data_frame())
     print(preprocess(to_data_frame()))
     print(return_tweets(to_data_frame()))
