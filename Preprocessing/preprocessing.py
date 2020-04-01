@@ -4,52 +4,61 @@ from pandas import DataFrame
 import nltk
 import re
 
-################### Globally Setting Values ##############################
 pd.set_option('display.max_columns', None)
-#testing to add to branch
 
+def create_data_frame(file_path):
+    
+    '''Creates a dataframe of the filepath passed in.
 
-def create_df():
-    with open('tweets3506.json') as json_file:
-        pandaDf = json.load(json_file)
+    Keyword arguments:
+    file_path -- file path to file that we are creating a dataframe for
+    
+    Returns: df
 
-def to_data_frame():
-    with open('../../tweets245.json') as json_file:
+    '''
+    
+    with open(file_path) as json_file:
         df = pd.read_json(json_file)
+        return df
       
-#currently removing punctuation, lowercase letters, remove numbers
-
 def preprocess(data):
+    
+    '''Does simple preprocessing on the df passed in.
+
+    Keyword arguments:
+    data -- dataframe that is passed in, contains the twitter json data.
+    
+    Returns: df
+
+    '''
+
     replace_no_space = re.compile("(\.)|(\;)|(\:)|(\!)|(\')|(\?)|(\,)|(\")|(\()|(\))|(\[)|(\])")
     replace_with_space = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)|(\x97)")
 
     clean_data = [replace_no_space.sub("", line.lower()) for line in data]
     clean_data = [replace_with_space.sub(" ", line) for line in data]
 
+    print(type(clean_data))
+
     return clean_data
 
 
 
-########## Sort data by Date (Making CSVs by week) #################
+########## Sort data by Date (Making dictionary by week (or timespan requested) #################
 
-
-
-
-
-
+ '''
+ We are currently planning on storing dataframes in a single dictionary. Each key is a date and each keyvalue corresponds to that respective
+ date's dataframe.
+ '''
 
 
 
 
 ######## Tokenization, preparation for Matrix #####################
 
-#tokenizing into words, removing stop words (bag of words model)
-#def tokenize_data():
-    # placeholder again
-
-#I'm not entirely sure the structure of the PMI matrix, but the data is now sent to that file
-
-
+ '''
+ this probably isn't necessary
+ '''
 
 
 ########### Main ################################################
@@ -57,5 +66,6 @@ def preprocess(data):
 
 
 if __name__ == "__main__":
-    print(preprocess(to_data_frame()))
-    print(return_tweets(to_data_frame()))
+    current_df = create_data_frame('../tweets245.json')
+    #print(current_df)
+    print(preprocess(current_df))
