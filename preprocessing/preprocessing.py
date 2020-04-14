@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 from pandas import DataFrame
 import nltk
@@ -59,23 +58,6 @@ def preprocess_tweet(tweet):
     return tweet_without_hashtags
     
 
-def clean_dataframe(passed_dataframe):
-    '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function
-
-    Keyword arguments:
-    passed_dataframe -- the dataframe this wants to be done on
-
-    '''
-
-    for tweet in passed_dataframe['tweet_text'][0:25]:
-        #print('TWEET: ', tweet, '\n')
-        
-        print('PREPROCESSED TWEET: ', preprocess_tweet(tweet), '\n')
-        
-        print('TOKENIZED LIST: ', tokenize(preprocess_tweet(tweet)), '\n')
-
-
-######## Tokenization && removing stopwords #####################
 
 def tokenize(cleaned_tweet):
     '''Tokenizes the tweet passed in. Also removes stop words.
@@ -95,6 +77,23 @@ def tokenize(cleaned_tweet):
     return tweet_list_no_stopwords
 
 
+def clean_dataframe(passed_dataframe):
+    '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function.
+    Uses preprocess() and then tokenize().
+
+    Keyword arguments:
+    passed_dataframe -- the dataframe this wants to be done on
+
+    '''
+
+    for tweet in passed_dataframe['tweet_text']:
+        #print('TWEET: ', tweet, '\n')
+        
+        print('PREPROCESSED TWEET: ', preprocess_tweet(tweet), '\n')
+        
+        #print('TOKENIZED LIST: ', tokenize(preprocess_tweet(tweet)), '\n')
+
+
 ########## Sort data by Date (Making dictionary by week (or timespan requested) #################
 
     ''' We are currently planning on storing dataframes in a single dictionary. Each key is a date and each keyvalue corresponds to that respective
@@ -110,9 +109,9 @@ def tokenize(cleaned_tweet):
 
 
 if __name__ == "__main__":
-    #current_df = create_data_frame('../../tweets245.json')
-    #clean_dataframe(current_df)
-    get_data()
+    for url in get_data()[0:1]:
+        current_df = create_data_frame(url)
+        clean_dataframe = clean_dataframe(current_df)
+        print(clean_dataframe)
+        #print(get_data())
 
-
-    
