@@ -26,6 +26,7 @@ def examine_file(f):
                 tweet = json.loads(tweet_text)
             except Exception as e:
                 print(e)
+                print(f"Problematic file: {fname}")
                 failed_tweets += 1
             else:
                 n_tweets += 1
