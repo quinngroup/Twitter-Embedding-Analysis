@@ -7,6 +7,17 @@ from nltk.tokenize import TweetTokenizer
 import os
 import glob
 
+
+# imports from count_data.py
+import argparse
+from functools import reduce
+import gzip
+import json
+from pathlib import Path
+
+from joblib import delayed, Parallel
+
+
 pd.set_option('display.max_columns', None)
 #nltk.download('all') Only do this on first run
 
@@ -40,7 +51,7 @@ def create_data_frame(file_path):
       
 def preprocess_tweet(tweet):
     
-    '''Does simple preprocessing on the df passed in.
+    '''Does simple preprocessing on the df passed in. Used by clean_dataframe().
 
     Keyword arguments:
     tweet -- the single tweet that is passed in, contains the twitter json data.
@@ -56,8 +67,6 @@ def preprocess_tweet(tweet):
     # This general process will continue until it's something we like
 
     return tweet_without_hashtags
-    
-
 
 def tokenize(cleaned_tweet):
     '''Tokenizes the tweet passed in. Also removes stop words.
@@ -100,18 +109,33 @@ def clean_dataframe(passed_dataframe):
         date's dataframe.
     '''
 
-
-
-
-
-########### Main ################################################
-
-
+#################################################
 
 if __name__ == "__main__":
-    for url in get_data()[0:1]:
-        current_df = create_data_frame(url)
-        clean_dataframe = clean_dataframe(current_df)
-        print(clean_dataframe)
-        #print(get_data())
+    parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
+        epilog = 'lol moar tweetz', add_help = 'How to use',
+        prog = 'python count_data.py -i <inputdir>')
+    parser.add_argument('-i', '--inputdir', required = True,
+        help = 'Path directory containing the json gzipped data.')
 
+    args = vars(parser.parse_args())
+    path = Path(args['inputdir'])
+
+    # Get the list of data files.
+    file_list = list(path.glob("*.json.gz"))
+    print(f"Found {len(file_list)} files.")
+
+    for x in range(1):
+        current_df = create_data_frame(x)
+        clean_dataframe = clean_dataframe(current_df)
+        print(clean_dataframe)        
+
+    '''
+    # Go through each one and preprocess.
+    out = Parallel(n_jobs = -1)(
+        delayed(examine_file)(f)
+        for f in file_list)
+    
+
+    results = list(reduce(lambda x, y: [x[0] + y[0], x[1] + y[1], x[2] + y[2]], out))
+    '''
