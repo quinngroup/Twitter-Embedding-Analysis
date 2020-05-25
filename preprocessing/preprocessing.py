@@ -94,17 +94,22 @@ def tokenize(cleaned_tweet):
 
 def clean_dataframe(passed_dataframe):
     '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function.
-    Uses preprocess() and then tokenize().
+    Uses preprocess() and creates a new dataframe.
 
     Keyword arguments:
     passed_dataframe -- the dataframe this wants to be done on
 
     '''
-    
+    df_tweet = []
+    df_date = []
     for tweet in passed_dataframe['text']:
-        #print('TWEET: ', tweet, '\n')
-        print('PREPROCESSED TWEET (And now tokenized): ', preprocess_tweet(tweet), '\n')
-        #print('TOKENIZED LIST: ', tokenize(preprocess_tweet(tweet)), '\n')
+        df_tweet.append(preprocess_tweet(tweet))
+#        df_date.append(tweet['created_at'])
+        
+    for tweet in df_tweet:
+        print(tweet)
+    for date in df_date:
+        print(date)
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
@@ -122,4 +127,7 @@ if __name__ == "__main__":
 
     for x in range(10):
         current_df = create_dataframe(file_list[x])
+#        print(current_df)
         clean_dataframe(current_df)
+        #Line below should insert each pd dataframe created from clean_dataframe into the overarching dask system
+        #[clean_dataframe(current_df)]
