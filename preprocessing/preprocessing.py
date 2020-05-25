@@ -51,6 +51,7 @@ def create_dataframe(file_path):
 def preprocess_tweet(tweet):
     
     '''Does simple preprocessing on the df passed in. Used by clean_dataframe().
+       Credit for tweet_without_hyperlinks and tweet_without_hyperlinks2 RegEx can be found at <a href="URL">https://stackoverflow.com/questions/720113/find-hyperlinks-in-text-using-python-twitter-related</a>
 
     Keyword arguments:
     tweet -- the single tweet that is passed in, contains the twitter json data.
@@ -65,11 +66,13 @@ def preprocess_tweet(tweet):
         #print(type(tweet))
         print('Raw tweet: ', tweet, '\n')
         tweet_without_rt = re.sub('RT', '', tweet)
-        tweet_without_hyperlinks = re.sub(r'https?:\/\.*\/\w*', "", tweet_without_rt)
-        tweet_without_hashtags = re.sub(r'#\w*', '', tweet_without_hyperlinks)
+        tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
+        tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
+        tweet_without_punctuation = re.sub('[.#,!?*]', '', tweet_without_hyperlinks2)
+        tweet_without_at = re.sub('@\w*', "", tweet_without_punctuation)
         # This general process will continue until it's something we like
         
-        return tweet_without_hashtags
+        return tokenize(tweet_without_at)
 
 def tokenize(cleaned_tweet):
     '''Tokenizes the tweet passed in. Also removes stop words. Used by clean_dataframe(). Also used by preprocess_tweet().
