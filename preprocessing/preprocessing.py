@@ -64,7 +64,7 @@ def preprocess_tweet(tweet):
         print('Empty Tweet')
     else:
         #print(type(tweet))
-        print('Raw tweet: ', tweet, '\n')
+        #print('Raw tweet: ', tweet, '\n')
         tweet_without_rt = re.sub('RT', '', tweet)
         tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
         tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
@@ -102,10 +102,14 @@ def clean_dataframe(passed_dataframe):
     '''
     df_tweet = []
     df_date = []
+
+
     for tweet in passed_dataframe['text']:
         df_tweet.append(preprocess_tweet(tweet))
-#        df_date.append(tweet['created_at'])
         
+    for date in passed_dataframe['created_at']:
+        df_date.append(date)
+
     for tweet in df_tweet:
         print(tweet)
     for date in df_date:
@@ -127,7 +131,7 @@ if __name__ == "__main__":
 
     for x in range(10):
         current_df = create_dataframe(file_list[x])
-#        print(current_df)
         clean_dataframe(current_df)
+
         #Line below should insert each pd dataframe created from clean_dataframe into the overarching dask system
         #[clean_dataframe(current_df)]
