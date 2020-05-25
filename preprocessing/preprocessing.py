@@ -72,7 +72,7 @@ def preprocess_tweet(tweet):
         return tweet_without_hashtags
 
 def tokenize(cleaned_tweet):
-    '''Tokenizes the tweet passed in. Also removes stop words. Used by clean_dataframe().
+    '''Tokenizes the tweet passed in. Also removes stop words. Used by clean_dataframe(). Also used by preprocess_tweet().
 
     Keyword arguments:
     cleaned_tweet -- the cleaned tweet.  
@@ -80,13 +80,14 @@ def tokenize(cleaned_tweet):
     returns a token
 
     '''
-
-    tweet_tokenizer = TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)
-    tweet_list = tweet_tokenizer.tokenize(cleaned_tweet)
-    tweet_list_no_stopwords = [i for i in tweet_list if i not in english_stopwords]
-
-    return tweet_list_no_stopwords
-
+    if isinstance(cleaned_tweet, float):
+        print('Empty Tweet')
+    else:
+        tweet_tokenizer = TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)
+        tweet_list = tweet_tokenizer.tokenize(cleaned_tweet)
+        tweet_list_no_stopwords = [i for i in tweet_list if i not in english_stopwords]
+        
+        return tweet_list_no_stopwords
 
 def clean_dataframe(passed_dataframe):
     '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function.
@@ -99,7 +100,7 @@ def clean_dataframe(passed_dataframe):
     
     for tweet in passed_dataframe['text']:
         #print('TWEET: ', tweet, '\n')
-        print('PREPROCESSED TWEET: ', preprocess_tweet(tweet), '\n')
+        print('PREPROCESSED TWEET (And now tokenized): ', preprocess_tweet(tweet), '\n')
         #print('TOKENIZED LIST: ', tokenize(preprocess_tweet(tweet)), '\n')
         
 if __name__ == "__main__":
