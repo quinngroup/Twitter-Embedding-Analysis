@@ -6,7 +6,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import TweetTokenizer
 import os
 import glob
-
+import dask.dataframe as dd
 
 # imports from count_data.py
 import argparse
@@ -128,6 +128,8 @@ if __name__ == "__main__":
     # Get the list of data files.
     file_list = list(path.glob("*.json.gz"))
     print(f"Found {len(file_list)} files.")
+
+    # For each file in Twitter Data, make a clean pd dataframe and add to a giant dask df.
 
     for x in range(10):
         current_df = create_dataframe(file_list[x])
