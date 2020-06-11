@@ -112,8 +112,23 @@ def clean_dataframe(passed_dataframe):
 
     for tweet in df_tweet:
         print(tweet)
-    for date in df_date:
-        print(date)
+    #for date in df_date:
+    #    print(date)
+
+def get_more_data(passed_dataframe):
+    '''Creates a new dataframe. This dataframe has every unique word in the passed_dataframe
+    and the frequency of each word. This dataframe is then pickled so it can be visualized later.
+
+    Keyword arguments:
+    passed_dataframe -- the dataframe this wants to be done on
+
+    returns a new dataframe
+    '''
+    unique_words = set()
+
+    for tweet in passed_dataframe['tweet']:
+        unique_words.add(tweet)
+    
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
