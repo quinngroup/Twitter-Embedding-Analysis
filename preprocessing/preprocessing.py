@@ -19,11 +19,16 @@ from joblib import delayed, Parallel
 
 
 pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+pd.set_option('display.max_colwidth', -1)
+
 #nltk.download('all') Only do this on first run
 
 english_stopwords = stopwords.words('english') 
 
-def get_data():
+def get_data(path):
 
     '''Returns a list of the relative filepaths of all of the twitter data we are using.
     This makes collaboration easy, because the filepaths should be the same for all of us.
@@ -32,8 +37,20 @@ def get_data():
 
     '''
 
-    return(glob.glob('../../../opt/data/twitter/*'))
+    path = Path(path)
+    # Get the list of data files.
+    file_list = list(path.glob("*.json.gz"))
+    print(f"Found {len(file_list)} files.")
 
+    # For each file in Twitter Data, make a clean pd dataframe and add to a giant dask df.
+
+    return file_list
+
+    for x in range(10):
+        current_df = create_dataframe(file_list[x])
+        return clean_dataframe(current_df)
+
+    
 def create_dataframe(file_path):
     
     '''Creates a dataframe of the filepath passed in.
