@@ -63,6 +63,8 @@ def create_dataframe(file_path):
     '''
     
     df = pd.read_json(file_path, compression='gzip', lines=True)
+    df = df.dropna(how='all',thresh=4)
+    df = df.reset_index(drop=True)
     return df
     
 def preprocess_tweet(tweet):
@@ -113,6 +115,7 @@ def clean_dataframe(passed_dataframe):
     '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function.
     Uses preprocess() and creates a new dataframe.
 
+
     Keyword arguments:
     passed_dataframe -- the dataframe this wants to be done on
 
@@ -123,7 +126,7 @@ def clean_dataframe(passed_dataframe):
 
     for tweet in passed_dataframe['text']:
         df_tweet.append(preprocess_tweet(tweet))
-        
+
     for date in passed_dataframe['created_at']:
         df_date.append(date)
 
@@ -131,6 +134,8 @@ def clean_dataframe(passed_dataframe):
         print(tweet)
     #for date in df_date:
     #    print(date)
+
+    return df_tweet
 
 def get_more_data(passed_dataframe):
     '''Creates a new dataframe. This dataframe has every unique word in the passed_dataframe
