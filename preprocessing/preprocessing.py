@@ -7,6 +7,7 @@ from nltk.tokenize import TweetTokenizer
 import os
 import glob
 import dask.dataframe as dd
+import shutil
 
 # imports from count_data.py
 import argparse
@@ -150,7 +151,11 @@ def get_more_data(passed_dataframe):
 
     for tweet in passed_dataframe['tweet']:
         unique_words.add(tweet)
-    
+
+#Function to move the testing files into another directory
+#https://thispointer.com/python-how-to-copy-files-from-one-location-to-another-using-shutil-copy/
+#def move_files(src):
+    #newPath = shutil.copy(src, '../../../../data/testing-directory/')
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
@@ -174,3 +179,8 @@ if __name__ == "__main__":
 
         #Line below should insert each pd dataframe created from clean_dataframe into the overarching dask system
         #[clean_dataframe(current_df)]
+
+#Used to move the testing files into another directory
+    #file_list_now = get_data('../../../../data/twitterdata/')
+    #for x in range(0, len(file_list_now), 500):
+        #move_files(file_list_now[x])
