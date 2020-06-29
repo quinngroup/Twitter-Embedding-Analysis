@@ -7,6 +7,7 @@ from nltk.tokenize import TweetTokenizer
 import os
 import glob
 import dask.dataframe as dd
+import shutil
 
 # imports from count_data.py
 import argparse
@@ -26,7 +27,7 @@ pd.set_option('display.max_colwidth', -1)
 
 #nltk.download('all') Only do this on first run
 
-english_stopwords = stopwords.words('english') 
+english_stopwords = set(stopwords.words('english'))
 
 def get_data(path):
 
@@ -63,6 +64,8 @@ def create_dataframe(file_path):
     '''
     
     df = pd.read_json(file_path, compression='gzip', lines=True)
+    df = df.dropna(how='all',thresh=4)
+    df = df.reset_index(drop=True)
     return df
     
 def preprocess_tweet(tweet):
@@ -82,11 +85,13 @@ def preprocess_tweet(tweet):
     else:
         #print(type(tweet))
         #print('Raw tweet: ', tweet, '\n')
-        tweet_without_rt = re.sub('RT', '', tweet)
-        tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
-        tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
-        tweet_without_punctuation = re.sub('[.#,!?*]', '', tweet_without_hyperlinks2)
-        tweet_without_at = re.sub('@\w*', "", tweet_without_punctuation)
+        #tweet_without_rt = re.sub('RT', '', tweet)
+        #tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
+        #tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
+        #tweet_without_punctuation = re.sub('[.#,!?*"”“:/()]', "", tweet_without_hyperlinks2)
+        #tweet_without_at = re.sub('@\w*', "", tweet_without_punctuation)
+        patterns = ('RT', r'(http://[^ ]+)', r'(https://[^ ]+)', '[.#,!?*"”“:/()]', '@\w*')
+        tweet_without_at = re.sub(r'|'.join(patterns), "", tweet)
         # This general process will continue until it's something we like
         
         return tokenize(tweet_without_at)
@@ -113,6 +118,7 @@ def clean_dataframe(passed_dataframe):
     '''Calls preprocess_tweet on all the tweets within the dataframe that is passed into the function.
     Uses preprocess() and creates a new dataframe.
 
+
     Keyword arguments:
     passed_dataframe -- the dataframe this wants to be done on
 
@@ -123,7 +129,7 @@ def clean_dataframe(passed_dataframe):
 
     for tweet in passed_dataframe['text']:
         df_tweet.append(preprocess_tweet(tweet))
-        
+
     for date in passed_dataframe['created_at']:
         df_date.append(date)
 
@@ -131,6 +137,8 @@ def clean_dataframe(passed_dataframe):
         print(tweet)
     #for date in df_date:
     #    print(date)
+
+    return df_tweet
 
 def get_more_data(passed_dataframe):
     '''Creates a new dataframe. This dataframe has every unique word in the passed_dataframe
@@ -145,7 +153,11 @@ def get_more_data(passed_dataframe):
 
     for tweet in passed_dataframe['tweet']:
         unique_words.add(tweet)
-    
+
+#Function to move the testing files into another directory
+#https://thispointer.com/python-how-to-copy-files-from-one-location-to-another-using-shutil-copy/
+#def move_files(src):
+    #newPath = shutil.copy(src, '../../../../data/testing-directory/')
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
@@ -169,3 +181,8 @@ if __name__ == "__main__":
 
         #Line below should insert each pd dataframe created from clean_dataframe into the overarching dask system
         #[clean_dataframe(current_df)]
+
+#Used to move the testing files into another directory
+    #file_list_now = get_data('../../../../data/twitterdata/')
+    #for x in range(0, len(file_list_now), 500):
+        #move_files(file_list_now[x])
