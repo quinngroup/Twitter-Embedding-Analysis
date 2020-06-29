@@ -27,7 +27,7 @@ pd.set_option('display.max_colwidth', -1)
 
 #nltk.download('all') Only do this on first run
 
-english_stopwords = stopwords.words('english') 
+english_stopwords = set(stopwords.words('english'))
 
 def get_data(path):
 
@@ -85,11 +85,13 @@ def preprocess_tweet(tweet):
     else:
         #print(type(tweet))
         #print('Raw tweet: ', tweet, '\n')
-        tweet_without_rt = re.sub('RT', '', tweet)
-        tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
-        tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
-        tweet_without_punctuation = re.sub('[.#,!?*]', '', tweet_without_hyperlinks2)
-        tweet_without_at = re.sub('@\w*', "", tweet_without_punctuation)
+        #tweet_without_rt = re.sub('RT', '', tweet)
+        #tweet_without_hyperlinks = re.sub(r'(http://[^ ]+)', "", tweet_without_rt)
+        #tweet_without_hyperlinks2 = re.sub(r'(https://[^ ]+)', "", tweet_without_hyperlinks)
+        #tweet_without_punctuation = re.sub('[.#,!?*"”“:/()]', "", tweet_without_hyperlinks2)
+        #tweet_without_at = re.sub('@\w*', "", tweet_without_punctuation)
+        patterns = ('RT', r'(http://[^ ]+)', r'(https://[^ ]+)', '[.#,!?*"”“:/()]', '@\w*')
+        tweet_without_at = re.sub(r'|'.join(patterns), "", tweet)
         # This general process will continue until it's something we like
         
         return tokenize(tweet_without_at)
