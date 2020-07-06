@@ -114,8 +114,3 @@ if __name__ == "__main__":
         #Line below should insert each pd dataframe created from clean_dataframe into the overarching dask system
         #[clean_dataframe(current_df)]
 
-#Used to move the testing files into another directory
-    file_list_now = get_data('../../../../data/twitterdata/')
-    while 
-    for x in range(0, 10000):
-        chunks(file_list_now[x], )
