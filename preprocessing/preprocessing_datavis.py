@@ -45,6 +45,11 @@ def get_data(path):
 
     return file_list
 
+#Function to move the testing files into another directory
+#https://thispointer.com/python-how-to-copy-files-from-one-location-to-another-using-shutil-copy/
+def chunks(src, dest):
+    newPath = shutil.copy(src, dest)
+
 def preprocess_tweet(tweet):
     
     '''Does simple preprocessing on the df passed in. Used by clean_dataframe().
@@ -85,11 +90,6 @@ def tokenize(cleaned_tweet):
         tweet_list_no_stopwords = [i for i in tweet_list if i not in english_stopwords]
         
         return tweet_list_no_stopwords
-
-#Function to move the testing files into another directory
-#https://thispointer.com/python-how-to-copy-files-from-one-location-to-another-using-shutil-copy/
-def chunks(src, dest):
-    newPath = shutil.copy(src, dest)
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
