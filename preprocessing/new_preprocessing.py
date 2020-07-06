@@ -18,6 +18,7 @@ from pathlib import Path
 
 from joblib import delayed, Parallel
 
+# pd options to for cleaner output
 
 #pd.set_option('display.max_columns', None)
 #pd.set_option('display.max_rows', 500)
@@ -44,11 +45,6 @@ def get_data(path):
     print(f"Found {len(file_list)} files.")
 
     return file_list
-
-#Function to move the testing files into another directory
-#https://thispointer.com/python-how-to-copy-files-from-one-location-to-another-using-shutil-copy/
-def chunks(src, dest):
-    newPath = shutil.copy(src, dest)
 
 def preprocess_tweet(tweet):
     
