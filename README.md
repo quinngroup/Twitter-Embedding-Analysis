@@ -10,6 +10,11 @@ The central focus of our project is to identify semantic shifts in Twitter data 
  - Remove or move all files that are not being used
  - Background research to compile for intro portion of manuscript
 
+**Data Visualization:**
+ - Create file chunks (~10k files each) organized chronologically and output the preprocessed tweets into text files
+ - Create graphs (Matplotlib) of word frequencies over each chunk of files
+ - Jupyter Notebook hosted on MyBinder to show graphs (WIP)
+
 **Preprocessing Milestone:**
  - Code that reads .json file, processes the tweets by removing hashtags, usernames, rt's, and common stop words, and separates them into dictionaries by week or month(36 weeks total, 8 months) 2018-10-22 is the start 2018-09-20 is the end
    - The dictionaries can be saved as text files as long as there is a character that separates all of the tweets
@@ -47,17 +52,23 @@ The central focus of our project is to identify semantic shifts in Twitter data 
  - Write Abstract
  - ...
 
-## Project Members:
+**Further Steps:**
+ - Implement continuous integration and unit testing
 
-**Kevin Sadi:** Developing data preprocessing script.
+## Project Members:
 
 **Zane Page (Project Lead):** Implementing algorithm for PPMI matrices.
 
-**Ivan Mo:** Updating project description files and implementing continuous integration.
-
 **Krishi Kishore:** Working on algorithm for alignment of PPMI matrices across time.
+
+**Ivan Mo:** Updating project description files and developing preprocessing script and data visualization.
+
+**Kevin Sadi:** Developing data preprocessing script and data visualization.
 
 ## Sources:
 
 **Dynamic Word Embeddings for Evolving Semantic Discovery:**
 https://arxiv.org/abs/1703.00607
+**Training Temporal Word Embeddings with a Compass:**
+https://www.aaai.org/ojs/index.php/AAAI/article/view/4594
+
