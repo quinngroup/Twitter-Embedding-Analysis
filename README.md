@@ -69,6 +69,7 @@ The central focus of our project is to identify semantic shifts in Twitter data 
 
 **Dynamic Word Embeddings for Evolving Semantic Discovery:**
 https://arxiv.org/abs/1703.00607
+
 **Training Temporal Word Embeddings with a Compass:**
 https://www.aaai.org/ojs/index.php/AAAI/article/view/4594
 
