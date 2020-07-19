@@ -28,17 +28,15 @@ def move_data():
 
 def convert_to_csv(cluster_directory_path):
 
-     '''Converts all of the .json files in a cluster directory into a csv file.
+    '''Converts all of the .json files in a cluster directory into a csv file.
 
 
-     Output: a single .csv file found in the directory path this function was given a 
-     reference to.
+    Output: a single .csv file found in the directory path this function was given a reference to.
+    '''
 
-     '''
-
-     # Get all of the files in a cluster directory path
-     # Add them to a panda df
-     # `pd_df.to_csv(r'cluster_directory_path', index = False, header =True)`
+    # Get all of the files in a cluster directory path
+    # Add them to a panda df
+    # `pd_df.to_csv(r'cluster_directory_path', index = False, header =True)`
 
 
 if __name__ == "__main__":
