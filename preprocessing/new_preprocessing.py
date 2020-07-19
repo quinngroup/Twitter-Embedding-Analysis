@@ -86,6 +86,7 @@ def tokenize(cleaned_tweet):
         tweet_list_no_stopwords = [i for i in tweet_list if i not in english_stopwords]
         
         return tweet_list_no_stopwords
+
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Twitter Download Validation',
