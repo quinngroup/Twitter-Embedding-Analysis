@@ -75,4 +75,4 @@ def convert_to_csv(cluster_directory_path):
 
 
 if __name__ == "__main__":
-    make_giant_json('../../reorganized_data/cluster1/')
+    make_giant_json('../reorganized_data/cluster1/')
