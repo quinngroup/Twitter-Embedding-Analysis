@@ -9,6 +9,7 @@ import json
 import gzip
 from pathlib import Path
 import csv
+from operator import itemgetter
 
 def move_data():
     
@@ -71,26 +72,38 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
     cluster_txt_file_path = "../../reorganized_data/cluster" + str(cluster_num) + "/cluster" + str(cluster_num) + "files.csv"
 
     # Creating the base file if it doesn't exist
-    if not os.path.isfile(cluster_txt_file_path):
-        with open(cluster_txt_file_path, 'w') as csvfile:
-            filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow(['preprocessed tweet', 'date'])
-            print('made new file')
+#    if not os.path.isfile(cluster_txt_file_path):
+ #       with open(cluster_txt_file_path, 'w') as csvfile:
+  #          filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+   #         filewriter.writerow(['preprocessed tweet', 'date'])
+    #        print('made new file')
 
-    with open(cluster_txt_file_path, 'w') as csvfile:
-        basefilewriter =  csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for tweet in unprocessed_df['text']:
-            preprocessed_tweet = ' '.join(preprocessing.preprocess_tweet(tweet))
-            basefilewriter.writerow([preprocessed_tweet])  
+  #  with open(cluster_txt_file_path, 'w') as csvfile:
+   #     basefilewriter =  csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #    for tweet in unprocessed_df['text']:
+     #       preprocessed_tweet = ' '.join(preprocessing.preprocess_tweet(tweet))
+      #      basefilewriter.writerow([preprocessed_tweet])  
 
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    cluster_num = 1 #Change depending on cluster
-    cluster_file_list = get_files_in_cluster("../../reorganized_data/cluster" + str(cluster_num) + "/")
+    df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
+    rootdir = '../../reorganized_data/cluster1'
     
-    # Now for each file, we want to load it into a dataframe, preprocess, and write to a file
-    for file in cluster_file_list:
-        current_unprocessed_df = load_json(file)
-        preprocess_and_format_df(current_unprocessed_df, cluster_num)
+    for filename in os.listdir(rootdir):
+        listoftweets = []
+        with open(filename, "r+") as f:
+            for jsonObj in f:
+                tweetDict = json.loads(jsonObj)
+                listoftweets.append(tweetDict)
+                for tweet in listoftweets:
+                    if "text" in tweet:
+                        thetext = tweet["text"]
+                        thedate = tweet["created_at"]
+                        preprocessed_text = preprocessing.preprocess_tweet(thetext)
+                        new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
+                        df = df.append(new_row, ignore_index=True)
+                        
+    df.to_csv("../../reorganized_data/cluster1/output.csv")
+    print("Completed task.")
+    
