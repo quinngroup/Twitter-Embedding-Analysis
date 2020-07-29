@@ -89,6 +89,7 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
 if __name__ == "__main__":
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
     rootdir = '../../reorganized_data/cluster1'
+    counter = 0
     
     for filename in os.listdir(rootdir):
         listoftweets = []
@@ -103,6 +104,9 @@ if __name__ == "__main__":
                         preprocessed_text = preprocessing.preprocess_tweet(thetext)
                         new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
                         df = df.append(new_row, ignore_index=True)
+        counter += 1
+        if (counter > 100):
+            break
                         
     df.to_csv("../../reorganized_data/cluster1/output.csv")
     print("Completed task.")
