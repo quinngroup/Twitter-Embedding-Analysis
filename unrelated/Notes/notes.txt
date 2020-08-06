@@ -1,0 +1,47 @@
+latest_time: 2018-09-20 17:24:35
+earliest_time: 2018-01-22 20:55:01
+
+Data Between Jan 22nd and August 20th
+210 Days
+5040 Hours
+36 Weeks
+~8 months
+
+weeks it is!
+
+2018-01-22 - start_time - finished
+2018-01-29 - finished
+2018-02-05 - finished
+2018-02-12 - finished
+2018-02-19 - finished
+2018-02-26 - finished
+2018-03-05 - finished
+2018-03-12 - finished
+2018-03-19 - finished
+2018-03-26 - finished
+2018-04-02 - finished
+2018-04-09 - finished
+2018-04-16 - finished
+2018-04-23 - finished
+2018-04-30 - finished
+2018-05-07 - finished
+2018-05-14 - finished
+2018-05-21 - finished
+2018-05-28 - finished
+2018-06-04 - finished
+2018-06-11 - finihsed
+2018-06-18 - finished
+2018-06-25 - finished
+2018-07-02 - finished
+2018-07-09 - finished
+2018-07-16 - finished
+2018-07-23 - finished
+2018-07-30 - finished
+2018-08-06 - finished
+2018-08-13 - finished
+2018-08-20 - finished
+2018-08-27 - running
+2018-09-03 - running
+2018-09-10 - running
+2018-09-17 - running
+2018-09-20 - end_time
