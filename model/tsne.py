@@ -6,7 +6,8 @@ import numpy as np
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import sklearn.manifold.TSNE as tsne
+from sklearn.manifold import TSNE as tsne
+import seaborn as sns
 
 #SVD Attempt:
 
@@ -37,40 +38,48 @@ sparsematrix = filled.to_numpy()
 #print(true_s.shape)
 #np.save('../../reorganized_data/cluster1/sparse_matrix', true_s)
 
-
-
-#PCA Attempt:
-
-pca = PCA(n_components=2)
+pca = PCA(n_components=2000)
 pca.fit(sparsematrix)
 X_pca = pca.transform(sparsematrix)
+print("completed pca")
 
-print(X_pca.shape)
+tsne_results = tsne(n_components=2, verbose=1).fit_transform(X_pca)
+print("completed tsne")
 
-arr = list(X_pca.T)
-x = arr[0]
-x = [number**3 for number in x]
-y = arr[1]
-y = [number**3 for number in y]
-#z = arr[2]
-#z = [number**10 for number in z]
+#arr = list(tsnedata.T)
+#x = tsne_results[:,0]
+#x = [number**3 for number in x]
+#y = tsne_results[:,1]
+#y = [number**3 for number in y]
+
 
 #fig = plt.figure()
 #ax = fig.gca(projection='3d')
-fig, ax = plt.subplots()
-ax.set(xlim = (0,20), ylim = (-500, 1000))
-ax.scatter(x, y)
+#fig, ax = plt.subplots()
+#ax.set(xlim = (0,20), ylim = (-500, 1000))
+#ax.scatter(x, y)
 
-for i in range(0, 3000):
-    label = listofwords[i]
-    ax.text(x[i], y[i],  label)
+#for i in range(0, 3000):
+#    label = listofwords[i]
+#    ax.text(x[i], y[i],  label)
 #    ax.annotate(txt, (x[i], y[i], z[i]))
+df_subset = pd.DataFrame(columns=['tsne-2d-one', 'tsne-2d-two'])
+df_subset['tsne-2d-one'] = tsne_results[:,0]
+df_subset['tsne-2d-two'] = tsne_results[:,1]
+plt.figure(figsize=(16,10))
+sns.scatterplot(
+    x="tsne-2d-one", y="tsne-2d-two",
+    hue="y",
+    palette=sns.color_palette("hls", 10),
+    data=df_subset,
+    legend="full",
+    alpha=0.3
+)
 
-plt.savefig('../../reorganized_data/cluster1/pcaplot.png')
+plt.savefig('../../reorganized_data/cluster1/tsneplot.png')
 
 print("Completed")
 
 #Future Ideas/steps:
     #Scale the values out to the 15th power and then view it and scale it back down
     #SVD first then PCA on SVD
-
