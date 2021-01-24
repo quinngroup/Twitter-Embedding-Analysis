@@ -91,7 +91,7 @@ if __name__ == "__main__":
     #move_data()
 
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
-    rootdir = 'reorganized_data/cluster1'
+    rootdir = '../../reorganized_data/cluster1'
     counter = 0
     for filename in os.listdir(rootdir):
         print("fname",filename)

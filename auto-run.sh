@@ -7,6 +7,6 @@ mkdir ../reorganized_data
 python preprocessing/cluster_creator.py
 
 echo "Attempting to create output.csv(all preprocessed tweets in a cluster)"
-python prepreocessing/restructure_data.py
+python preprocessing/restructure_data.py
 
 
