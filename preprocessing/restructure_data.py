@@ -13,7 +13,7 @@ from operator import itemgetter
 
 def move_data():
     
-    '''This function seperates our Twitter Data (originally in a single directory of 157345
+    '''This function separates our Twitter Data (originally in a single directory of 157345
     .json files) into 16 different directories (clusters) of data. The newly formed data
     is created in the current working directory in a folder entitled `reorganized_data`.
     This function will work correctly no matter where it is called. It is advised to 
@@ -87,13 +87,17 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
 
 
 if __name__ == "__main__":
+    #Run for first time
+    #move_data()
+
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
-    rootdir = '../../reorganized_data/cluster1'
+    rootdir = 'reorganized_data/cluster1'
     counter = 0
-    
     for filename in os.listdir(rootdir):
+        print("fname",filename)
         listoftweets = []
-        with open(filename, "r+") as f:
+        with gzip.open(rootdir+"/"+filename, "r+") as f:
+            #unpacked_f = load_json(f)
             for jsonObj in f:
                 tweetDict = json.loads(jsonObj)
                 listoftweets.append(tweetDict)
@@ -107,6 +111,30 @@ if __name__ == "__main__":
         counter += 1
         if (counter > 100):
             break
+
+
+
+    # ***Old code***                     
+    # df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
+    # rootdir = 'reorganized_data/cluster1'
+    # counter = 0
+    
+    # for filename in os.listdir(rootdir):
+    #     listoftweets = []
+    #     with open(rootdir+"/"+filename, "r+") as f:
+    #         for jsonObj in f:
+    #             tweetDict = json.loads(jsonObj)
+    #             listoftweets.append(tweetDict)
+    #             for tweet in listoftweets:
+    #                 if "text" in tweet:
+    #                     thetext = tweet["text"]
+    #                     thedate = tweet["created_at"]
+    #                     preprocessed_text = preprocessing.preprocess_tweet(thetext)
+    #                     new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
+    #                     df = df.append(new_row, ignore_index=True)
+        # counter += 1
+        # if (counter > 100):
+        #     break
                         
     df.to_csv("../../reorganized_data/cluster1/output.csv")
     print("Completed task.")

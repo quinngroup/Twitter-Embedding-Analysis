@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 
 # opens twitter directory
-#path = "/opt/data/twitter"
-path="/Users/krishikishore/desktop/wordembeddinganalysis/tweets"
+path = "/opt/data/twitter"
+#path="/Users/krishikishore/desktop/wordembeddinganalysis/tweets"
 twitter_dir = os.listdir(path) # creates list object of all files in path
 
 #print(twitter_dir)
