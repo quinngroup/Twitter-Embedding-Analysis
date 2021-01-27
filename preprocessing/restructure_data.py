@@ -3,6 +3,7 @@ import preprocessing
 
 import os
 import shutil
+import multiprocessing
 import pandas as pd
 from pandas import DataFrame
 import json
@@ -10,6 +11,7 @@ import gzip
 from pathlib import Path
 import csv
 from operator import itemgetter
+from  tqdm import tqdm
 
 def move_data():
     
@@ -33,7 +35,7 @@ def move_data():
             if y < len(file_list):
                 shutil.copy(file_list[y], dir_name)      
 
-def get_files_in_cluster(cluster_path):
+def get_files_in_cluster(cluster_num):
     '''Returns a file_list of all the json files in a cluster.
 
     Keyword arguments:
@@ -42,7 +44,7 @@ def get_files_in_cluster(cluster_path):
     Returns: file list of all the json files in a cluster.
 
     '''
-
+    cluster_path = "../reorganized_data/cluster" + str(cluster_num)
     path = Path(cluster_path)
     file_list = list(path.glob("*.json.gz"))
     return file_list
@@ -86,56 +88,43 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
 
 
 
-if __name__ == "__main__":
-    #Run for first time
-    #move_data()
-
+# if __name__ == "__main__":
+def process_files(num, files):
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
-    rootdir = '../../reorganized_data/cluster1'
-    counter = 0
-    for filename in os.listdir(rootdir):
-        print("fname",filename)
-        listoftweets = []
-        with gzip.open(rootdir+"/"+filename, "r+") as f:
-            #unpacked_f = load_json(f)
-            for jsonObj in f:
-                tweetDict = json.loads(jsonObj)
-                listoftweets.append(tweetDict)
-                for tweet in listoftweets:
-                    if "text" in tweet:
-                        thetext = tweet["text"]
-                        thedate = tweet["created_at"]
-                        preprocessed_text = preprocessing.preprocess_tweet(thetext)
-                        new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
-                        df = df.append(new_row, ignore_index=True)
-        counter += 1
-        if (counter > 100):
-            break
 
-
-
-    # ***Old code***                     
-    # df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
-    # rootdir = 'reorganized_data/cluster1'
-    # counter = 0
-    
-    # for filename in os.listdir(rootdir):
-    #     listoftweets = []
-    #     with open(rootdir+"/"+filename, "r+") as f:
-    #         for jsonObj in f:
-    #             tweetDict = json.loads(jsonObj)
-    #             listoftweets.append(tweetDict)
-    #             for tweet in listoftweets:
-    #                 if "text" in tweet:
-    #                     thetext = tweet["text"]
-    #                     thedate = tweet["created_at"]
-    #                     preprocessed_text = preprocessing.preprocess_tweet(thetext)
-    #                     new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
-    #                     df = df.append(new_row, ignore_index=True)
-        # counter += 1
-        # if (counter > 100):
-        #     break
-                        
-    df.to_csv("../../reorganized_data/cluster1/output.csv")
+    for filename in tqdm(files):
+      # print("fname",filename)
+      listoftweets = []
+      with gzip.open(filename, "r+") as f:
+        #unpacked_f = load_json(f)
+        for jsonObj in f:
+          tweetDict = json.loads(jsonObj)
+          listoftweets.append(tweetDict)
+          for tweet in listoftweets:
+            if "text" in tweet:
+              thetext = tweet["text"]
+              thedate = tweet["created_at"]
+              preprocessed_text = preprocessing.preprocess_tweet(thetext)
+              new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
+              df = df.append(new_row, ignore_index=True)
+    df.to_csv("../../reorganized_data/cluster" + str(i) + "/output" + str(num) + ".csv")
     print("Completed task.")
-    
+
+def process_manager():
+  num_processes = 20
+  for i in range(18): # iterate through clusters
+    print("working on cluster",i)
+    file_list = get_files_in_cluster(i)
+    num_files = len(file_list)
+    file_chunks = [file_list[x:x+(num_files//num_processes)] for x in range(0, num_files, num_files//num_processes)]
+
+    processes = []
+    for j in range(num_processes): # 10 processes
+      p = multiprocessing.Process(target=process_files, args=[j, file_chunks[j]])
+      p.start()
+      processes.append(p)
+
+    for process in processes:
+      process.join()
+
+process_manager()
