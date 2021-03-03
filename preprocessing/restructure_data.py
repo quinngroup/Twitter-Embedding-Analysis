@@ -89,7 +89,8 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
 
 
 # if __name__ == "__main__":
-def process_files(num, files):
+def process_files(num, files, clust_num):
+    
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
 
     for filename in tqdm(files):
@@ -105,26 +106,28 @@ def process_files(num, files):
               thetext = tweet["text"]
               thedate = tweet["created_at"]
               preprocessed_text = preprocessing.preprocess_tweet(thetext)
-              new_row = {'created_at':thedate, 'text':thetext, 'preprocessed_text':preprocessed_text}
+              new_row = {'created_at': thedate, 'text': thetext, 'preprocessed_text': preprocessed_text}
               df = df.append(new_row, ignore_index=True)
-    df.to_csv("../../reorganized_data/cluster" + str(i) + "/output" + str(num) + ".csv")
+    df.to_csv("../reorganized_data/cluster" + str(clust_num) + "/output" + str(num) + ".csv")
     print("Completed task.")
 
 def process_manager():
-  num_processes = 20
-  for i in range(18): # iterate through clusters
-    print("working on cluster",i)
-    file_list = get_files_in_cluster(i)
-    num_files = len(file_list)
-    file_chunks = [file_list[x:x+(num_files//num_processes)] for x in range(0, num_files, num_files//num_processes)]
+  num_processes = 12
+  
+  #for i in range(18): # iterate through clusters
+  i = 0
+  print("working on cluster",i)
+  file_list = get_files_in_cluster(i)
+  num_files = len(file_list)
+  file_chunks = [file_list[x:x+(num_files//num_processes)] for x in range(0, num_files, num_files//num_processes)]
 
-    processes = []
-    for j in range(num_processes): # 10 processes
-      p = multiprocessing.Process(target=process_files, args=[j, file_chunks[j]])
-      p.start()
-      processes.append(p)
+  processes = []
+  for j in range(num_processes): # 12 processes
+    p = multiprocessing.Process(target=process_files, args=[j, file_chunks[j], i])
+    p.start()
+    processes.append(p)
 
-    for process in processes:
-      process.join()
+  for process in processes:
+    process.join()
 
 process_manager()
