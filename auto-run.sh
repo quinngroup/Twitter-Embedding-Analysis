@@ -10,4 +10,6 @@ python preprocessing/cluster_creator.py
 echo "Attempting to create output.csv(all preprocessed tweets in a cluster)"
 python preprocessing/restructure_data.py
 
-
+# vocab_dict.py
+#
+# count_data.py

@@ -1,52 +1,41 @@
 import numpy as np
 import pandas as pd
-import os
+import os, re
+from tqdm import tqdm
 
-#read in output csv file from reorganize file
-df = pd.read_csv('../../reorganized_data/cluster1/output.csv')
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+#~~~~ Look into reducing code by stripping index from empty and using it as vocabualry ~~~~
+allwords = pd.read_csv('empty_matrix.csv')
+allwords = allwords["word_set"].tolist() # gets vocabulary from word_set
+print("read allwords")
 
-#initialize variables
-alltweets = []
-allwords = []
-window = 5
+emptymatrix = pd.read_csv('empty_matrix.csv', index_col='word_set')
+print("read empty matrix")
 
-#get all tweets in one array
-for index, row in df.iterrows():
-    alltweets.append(row["preprocessed_text"])
+for i in range(12):
+  df = pd.read_csv('../reorganized_data/cluster3/output'+str(i)+'.csv')
+  alltweets = df["preprocessed_text"].tolist()
+  print("read alltweets")
 
-#get all unique words in the tweets in one array (vocabulary)    
-for tweet in alltweets:
-    # These two lines before change the `tweet` from str to list
-    tweet = tweet.replace(']','').replace('[','')
-    tweet = tweet.replace('"','').split(",")
-    for word in tweet:
-        if word not in allwords:
-            (allwords.append(word))
-
-#determine N (the length of the vocabulary)
-#print('number of all words: ' + str(len(allwords)))
-
-emptymatrix = pd.read_csv('../../reorganized_data/cluster1/empty_matrix.csv')
-emptymatrix = emptymatrix.loc[:, ~emptymatrix.columns.str.contains('^Unnamed')]
-emptymatrix = emptymatrix.set_index('word') # Changing index from nums to words
-emptymatrix = emptymatrix.reset_index().dropna().set_index('word') # changing index from nums to words
-
-pd.set_option('display.max_rows', 9000)
-pd.set_option('display.max_columns', 9000)
-
-for word in allwords:
+  print("window counts starting now")
+  for word in allwords:
     for separateddocument in alltweets:
-        # These two lines below change the `separateddocument` from str to list
-        separateddocument = separateddocument.replace(']','').replace('[','')
-        separateddocument = separateddocument.replace('"','').split(",")
-        if word in separateddocument:
-            indices = [i for i, x in enumerate(separateddocument) if x == word]
-            for index in indices:
-                sliced_front = separateddocument[index-5 if index-5 > 0 else 0: index]
-                sliced_end = separateddocument[index+1: index+6]
-                wordsrange = sliced_front + sliced_end
-                for windowword in wordsrange:
-                    emptymatrix.at[word, windowword] += 1
+      # These two lines below change the `separateddocument` from str to list
+      separateddocument = str(separateddocument)
+      separateddocument = separateddocument.replace(']','').replace('[','')
+      separateddocument = separateddocument.replace('\'','').replace('"',"")
+      separateddocument = re.sub(r'[^\w\s]','',str(separateddocument))
+      separateddocument = re.sub(r'[^a-zA-Z+]',' ',separateddocument)
+      separateddocument = re.sub(' +',' ',separateddocument).split(" ")
+      #print(word,"---" ,separateddocument)
+      if word in separateddocument:
+        #print("word is found in doc")
+        indices = [i for i, x in enumerate(separateddocument) if x == word]
+        for index in indices:
+          sliced_front = separateddocument[index-5 if index-5 > 0 else 0: index]
+          sliced_end = separateddocument[index+1: index+6]
+          wordsrange = sliced_front + sliced_end
+          for windowword in wordsrange:
+            if windowword in allwords:
+              emptymatrix.at[word, windowword] += 1
 
-emptymatrix.to_csv('../../reorganized_data/cluster1/filled_matrix.csv')
+emptymatrix.to_csv('../reorganized_data/cluster3/filled_matrix.csv')

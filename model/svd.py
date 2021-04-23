@@ -2,10 +2,7 @@ import pandas as pd
 from numpy import linalg
 import numpy as np
 
-df = pd.read_csv('../../reorganized_data/cluster1/ppmi_matrix11.csv')
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-df = df.set_index('word')
-df = df.replace([np.inf,-np.inf],np.nan).fillna(0)
+df = pd.read_csv('../../reorganized_data/cluster0/filled_matrix.csv', index_col="word_set")
 mat = np.array(df, dtype="float")
 print(mat.shape)
 print(np.isnan(mat).any())

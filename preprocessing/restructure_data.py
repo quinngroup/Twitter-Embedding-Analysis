@@ -115,7 +115,7 @@ def process_manager():
   num_processes = 12
   
   #for i in range(18): # iterate through clusters
-  i = 0
+  i = 3
   print("working on cluster",i)
   file_list = get_files_in_cluster(i)
   num_files = len(file_list)
