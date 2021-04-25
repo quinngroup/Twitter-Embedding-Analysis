@@ -1,4 +1,4 @@
-latest_time: 2018-09-20 17:24:35
+test_time: 2018-09-20 17:24:35
 earliest_time: 2018-01-22 20:55:01
 
 Data Between Jan 22nd and August 20th
