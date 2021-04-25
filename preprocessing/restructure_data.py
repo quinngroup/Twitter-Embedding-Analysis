@@ -90,44 +90,55 @@ def preprocess_and_format_df(unprocessed_df, cluster_num):
 
 # if __name__ == "__main__":
 def process_files(num, files, clust_num):
-    
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
-
+    
+    # parrelelize inside the function V
     for filename in tqdm(files):
       # print("fname",filename)
       listoftweets = []
-      with gzip.open(filename, "r+") as f:
-        #unpacked_f = load_json(f)
-        for jsonObj in f:
-          tweetDict = json.loads(jsonObj)
-          listoftweets.append(tweetDict)
-          for tweet in listoftweets:
-            if "text" in tweet:
-              thetext = tweet["text"]
-              thedate = tweet["created_at"]
-              preprocessed_text = preprocessing.preprocess_tweet(thetext)
-              new_row = {'created_at': thedate, 'text': thetext, 'preprocessed_text': preprocessed_text}
-              df = df.append(new_row, ignore_index=True)
+      with gzip.open(filename, "rt") as f:
+      #tweetDict = json.load(gzip.open(filename, "r"))
+      #unpacked_f = load_json(f)
+        file_string = f.read().split("\n")
+        for t in file_string:
+          listoftweets.append(json.loads(t))
+      # loads() or dumps()
+      #try:
+      #tweetDict = json.loads(file_string)
+      #except:
+        #print(file_string)
+      #print(listoftweets[:5])
+      notext = 0
+      for jsonObj in listoftweets:
+        #print(list(jsonObj.keys()))
+        if "text" in jsonObj.keys():
+          thetext = jsonObj["text"]
+          thedate = jsonObj["created_at"]
+          preprocessed_text = preprocessing.preprocess_tweet(thetext)
+          new_row = {'created_at': thedate, 'text': thetext, 'preprocessed_text': preprocessed_text}
+          df = df.append(new_row, ignore_index=True)
+        else:
+          notext+=1
+    # new_row = {'created_at': NaN, 'text':notext, 'processed_text':'' }
     df.to_csv("../reorganized_data/cluster" + str(clust_num) + "/output" + str(num) + ".csv")
     print("Completed task.")
 
 def process_manager():
   num_processes = 12
-  
-  #for i in range(18): # iterate through clusters
-  i = 3
-  print("working on cluster",i)
-  file_list = get_files_in_cluster(i)
-  num_files = len(file_list)
-  file_chunks = [file_list[x:x+(num_files//num_processes)] for x in range(0, num_files, num_files//num_processes)]
 
-  processes = []
-  for j in range(num_processes): # 12 processes
-    p = multiprocessing.Process(target=process_files, args=[j, file_chunks[j], i])
-    p.start()
-    processes.append(p)
+  for i in range(0,18): # iterate through clusters
+    print("working on cluster",i)
+    file_list = get_files_in_cluster(i)
+    num_files = len(file_list)
+    file_chunks = [file_list[x:x+(num_files//num_processes)] for x in range(0, num_files, num_files//num_processes)]
 
-  for process in processes:
-    process.join()
+    processes = []
+    for j in range(num_processes): # 12 processes
+      p = multiprocessing.Process(target=process_files, args=[j, file_chunks[j], i])
+      p.start()
+      processes.append(p)
+
+    for process in processes:
+      process.join()
 
 process_manager()

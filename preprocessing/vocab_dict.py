@@ -1,36 +1,43 @@
 import numpy as np
 import pandas as pd
-import os
+import os, re
+from tqdm import tqdm
+from nltk.corpus import stopwords
 
-df = pd.read_csv('../../reorganized_data/cluster1/output.csv')
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+stop_words = set(stopwords.words('english'))
 
-print(df[:5])
+for clust_num in range(0,18):
+  for i in range(0, 12):
+    df = pd.read_csv('../../reorganized_data/cluster'+str(clust_num)+'/output'+str(i)+'.csv')
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
-alltweets = []
-allwords = []
-window = 5
-vocab_dictionary = {}
+    print(len(df))
 
-for index, row in df.iterrows():
-        alltweets.append(row["preprocessed_text"])
+    alltweets = []
+    allwords = []
+    window = 5
+    vocab_dictionary = {}
 
-for tweet in alltweets:
-        tweet = tweet.replace(']','').replace('[','')
-        tweet = tweet.replace('"','').split(",")
-        for word in tweet:
-                if word not in allwords:
-                    allwords.append(word)
-                    vocab_dictionary[word] = 1
-                else:
-                    vocab_dictionary[word] += 1
+    for index, row in tqdm(df.iterrows()):
+      alltweets.append(row["preprocessed_text"])
 
-print(vocab_dictionary)
+    for tweet in tqdm(alltweets):
+      tweet = re.sub(r'[^\w\s]','',str(tweet))
+      tweet = re.sub(r'[^a-zA-Z]+',' ',tweet).split(" ")
+      for word in tweet:
+        if word not in allwords:
+          if word not in stop_words:
+            allwords.append(word)
+            vocab_dictionary[word] = 1
+        else:
+            vocab_dictionary[word] += 1
 
-dict_df = pd.DataFrame.from_dict(vocab_dictionary, orient='index', columns=['count'])
+  print(vocab_dictionary)
 
-print(dict_df)
+  dict_df = pd.DataFrame.from_dict(vocab_dictionary, orient='index', columns=['count'])
 
-dict_df.to_csv('../../reorganized_data/cluster1/vocab_dict.csv')
-print(len(vocab_dictionary) == len(allwords))
+  print(dict_df)
+
+  dict_df.to_csv('../../reorganized_data/cluster'+str(clust_num)+'/vocab_dict.csv')
+  print(len(vocab_dictionary) == len(allwords))
 print('Completed')

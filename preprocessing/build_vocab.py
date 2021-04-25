@@ -2,7 +2,7 @@ import pandas as pd
 from tqdm import tqdm
 
 # read in vocab files
-clust_vocab = pd.read_csv("../../reorganized_data/cluster0/vocab_dict.csv")
+clust_vocab = pd.read_csv("../reorganized_data/cluster0/vocab_dict.csv")
 clust_vocab = clust_vocab.rename(columns={"Unnamed: 0": "word_set"})
 print(clust_vocab[:5])
 
@@ -15,7 +15,7 @@ def build_with_x(freq=200):
   build vocabulary from words
   that occur more than freq times
   '''
-  clust_vocab = pd.read_csv("../../reorganized_data/cluster1/vocab_dict.csv")
+  clust_vocab = pd.read_csv("../reorganized_data/cluster1/vocab_dict.csv")
   print("cluster vocab")
   print(clust_vocab[:5])
   all_vocab = clust_vocab.copy()
@@ -36,9 +36,9 @@ def build_with_min(clust_vocab, l=10000):
   min = all_vocab.iloc[-1] # find first minimum
   #print("first min",min)
 
-  for i in range(1,4):
+  for i in range(1,18):
     print("cluster",i)
-    clust_vocab = pd.read_csv("../../reorganized_data/cluster"+str(i)+"/vocab_dict.csv").dropna()
+    clust_vocab = pd.read_csv("../reorganized_data/cluster"+str(i)+"/vocab_dict.csv").dropna()
     clust_vocab = clust_vocab.rename(columns={"Unnamed: 0": "word_set"})
     #print(clust_vocab[:5])
 
@@ -60,6 +60,6 @@ vocab = build_with_min(clust_vocab)
 print(len(vocab))
 d = {'count':'sum'}
 vocab = vocab.groupby(by='word_set', sort=False, as_index=False).agg(d).reindex(columns=vocab.columns)
-vocab.to_csv("../global_vocab.csv")
+vocab.to_csv("global_vocab.csv")
 print(vocab[:15])
 print(len(vocab))
