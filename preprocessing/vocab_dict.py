@@ -19,10 +19,10 @@ for clust_num in range(0,18):
     window = 5
     vocab_dictionary = {}
 
-    for index, row in tqdm(df.iterrows()):
+    for index, row in df.iterrows():
       alltweets.append(row["preprocessed_text"])
 
-    for tweet in tqdm(alltweets):
+    for tweet in alltweets:
       tweet = re.sub(r'[^\w\s]','',str(tweet))
       tweet = re.sub(r'[^a-zA-Z]+',' ',tweet).split(" ")
       for word in tweet:
