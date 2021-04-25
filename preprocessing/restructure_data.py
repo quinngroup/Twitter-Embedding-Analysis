@@ -93,7 +93,7 @@ def process_files(num, files, clust_num):
     df = pd.DataFrame(columns=['created_at', 'text', 'preprocessed_text'])
     
     # parrelelize inside the function V
-    for filename in tqdm(files):
+    for filename in files:
       # print("fname",filename)
       listoftweets = []
       with gzip.open(filename, "rt") as f:

@@ -44,7 +44,7 @@ def build_with_min(clust_vocab, l=10000):
 
     #print(len(clust_vocab))
     # iterate through vocab
-    for index, row in tqdm(clust_vocab.iterrows()):
+    for index, row in clust_vocab.iterrows():
       if min["count"] < row["count"]:
         all_vocab.iloc[-1] = row
         all_vocab = all_vocab.sort_values(by=["count"], ascending=False).reset_index(drop=True)
