@@ -1,6 +1,8 @@
 import new_preprocessing
 import preprocessing
 
+import nltk
+nltk.download('stopwords')
 import os
 import shutil
 import multiprocessing
