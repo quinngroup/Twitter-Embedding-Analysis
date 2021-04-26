@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os, re
 from tqdm import tqdm
+import nltk
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('english'))

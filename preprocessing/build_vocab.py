@@ -1,4 +1,6 @@
 import pandas as pd
+import nltk
+nltk.download('stopwords')
 from tqdm import tqdm
 
 # read in vocab files
