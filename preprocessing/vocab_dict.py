@@ -5,10 +5,14 @@ from tqdm import tqdm
 from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words('english'))
+vocab_dictionary = {}
 
-for clust_num in range(0,18):
+for clust_num in range(11,18):
   for i in range(0, 12):
-    df = pd.read_csv('../../reorganized_data/cluster'+str(clust_num)+'/output'+str(i)+'.csv')
+    print("cluster "+str(clust_num)+", output "+str(i))
+    path = '../reorganized_data/cluster'+str(clust_num)+'/output'+str(i)+'.csv'
+    df = pd.read_csv(open(path))
+
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
 
     print(len(df))
@@ -16,7 +20,6 @@ for clust_num in range(0,18):
     alltweets = []
     allwords = []
     window = 5
-    vocab_dictionary = {}
 
     for index, row in df.iterrows():
       alltweets.append(row["preprocessed_text"])
@@ -38,6 +41,7 @@ for clust_num in range(0,18):
 
   print(dict_df)
 
-  dict_df.to_csv('../../reorganized_data/cluster'+str(clust_num)+'/vocab_dict.csv')
+  dict_df.to_csv('../reorganized_data/cluster'+str(clust_num)+'/vocab_dict.csv')
+  print("saved cluster "+str(clust_num)+" vocab")
   print(len(vocab_dictionary) == len(allwords))
 print('Completed')
